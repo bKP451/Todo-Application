@@ -1,13 +1,10 @@
-import ProjectDescription from "./components/ProjectDescription/ProjectDescription";
 import ProjectsListing from "./components/ProjectsListing/ProjectsListing";
 import "./App.css";
-import { useState } from "react";
 
 function App() {
-  const [selectedProject, setSelectedProject] = useState("0");
   const initalProjects = [
     {
-      projectId: 1,
+      projectId: 0,
       projectTitle: "Get yourself a umbrella",
       tasks: [
         {
@@ -25,7 +22,7 @@ function App() {
       ],
     },
     {
-      projectId: 2,
+      projectId: 1,
       projectTitle: "Swimming Lessons",
       tasks: [
         {
@@ -50,7 +47,7 @@ function App() {
         <h1 className="heading">TO-DOOOOO</h1>
       </div>
       <div className="body-section">
-        <ProjectsListing allProjects = {initalProjects}/>
+        <ProjectsListing allProjects={initalProjects} />
       </div>
     </div>
   );

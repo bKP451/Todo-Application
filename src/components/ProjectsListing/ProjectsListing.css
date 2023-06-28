@@ -1,8 +1,17 @@
 .projects-listing-section {
-    flex: 2;
-    border: 1px green dashed;
-  }
+  flex: 2;
+  border: 1px green dashed;
+}
 
-  .project-item {
-    margin: 10px;
-  }
+.project-item {
+  margin: 10px;
+}
+
+.project-select-button {
+  border: none;
+  background-color: white;
+}
+
+.project-select-button:hover {
+  background-color: aqua;
+}

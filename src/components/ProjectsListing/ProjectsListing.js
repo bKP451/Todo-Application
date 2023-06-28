@@ -1,26 +1,38 @@
 import "./ProjectsListing.css";
 import { GrAdd } from "react-icons/gr";
 import ProjectDescription from "../ProjectDescription/ProjectDescription";
+import { useState } from "react";
 
 const ProjectsListing = ({ allProjects }) => {
-  console.log("I am first project", allProjects[0]);
+  const [projectId, setProjectId] = useState(0);
+
+  const handleProjectSelection = (projectId) => {
+    setProjectId(projectId);
+  };
+
   return (
     <>
       <div className="projects-listing-section">
         <h2>Projects</h2>
-        <ol>
-          {/* <li className="project-item">
-            <u>Get yourself a umbrella</u>
-          </li>
-          <li className="project-item">Swimming lessons</li> */}
-          {allProjects && allProjects.forEach((project) => {
-            <li className="project-item">{project.projectTitle}</li>
-          })}
+        <ol style={{ listStyle: "none" }}>
+          {allProjects.map((project) => (
+            <li key={project.projectId}>
+              <button
+                type="button"
+                style={{ cursor: "pointer" }}
+                className="project-select-button"
+                onClick={() => handleProjectSelection(project.projectId)}
+              >
+                {project.projectTitle}
+              </button>
+            </li>
+          ))}
+          <br />
           <GrAdd />
           {} Project
         </ol>
       </div>
-      <ProjectDescription />
+      <ProjectDescription project={allProjects[projectId]} />
     </>
   );
 };

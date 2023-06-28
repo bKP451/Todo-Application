@@ -3,11 +3,12 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { AiTwotoneEdit } from "react-icons/ai";
 
 const TaskItem = ({ title, description }) => {
+  console.log("Title and description", title, description);
   return (
     <div>
       <li className="single-todo-item">
         <input type="checkbox" />
-        <b>{title}{" "}</b>
+        <b>{title} </b>
         <br />
         {description}
         <br />
