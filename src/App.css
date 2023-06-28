@@ -1,60 +1,9 @@
 .heading {
   text-align: center;
-  color:blue;
+  color: blue;
 }
 
 .body-section {
   display: flex;
-}
-
-.project-section {
-  flex: 2;
-  border: 1px green dashed;
-}
-
-.project-task-section {
-  flex: 8;
-  border: 1px black solid;
-}
-
-.project-task-section h2 {
-  text-align: center;
-}
-
-.todo-input-items-wrapper{
-  display: flex;
-  padding: 20px;
-}
-
-.todo-input-item {
-  display: flex;
-  flex-direction: column;
-  margin: 10px;
-}
-
-.todo-input-item label{
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.todo-input-item input {
-  border: 1px black solid;
-  padding: 8px;
-  width: 250px;
-}
-
-.todo-input-item input:focus{
-  outline: 2px solid rgb(0, 230, 122);
-}
-.add-task-button {
-  background-color: rgb(0, 230, 122);
-  border: none;
-  margin-top: 25px;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.todo-lists {
-  list-style-type: none;
 }
 

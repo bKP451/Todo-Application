@@ -1,0 +1,53 @@
+.project-description-section {
+  flex: 8;
+  border: 1px black solid;
+}
+
+.project-description-section h2 {
+  text-align: center;
+}
+
+.todo-input-items-wrapper {
+  display: flex;
+  padding: 20px;
+}
+
+.todo-input-item {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.todo-input-item label {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.todo-input-item input {
+  border: 1px black solid;
+  padding: 8px;
+  width: 250px;
+}
+
+.todo-input-item input:focus {
+  outline: 2px solid rgb(0, 230, 122);
+}
+.add-task-button-active {
+  background-color: rgb(0, 230, 122);
+  border: none;
+  margin-top: 25px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.add-task-button {
+    background-color: rgb(0, 230, 122);
+    border: none;
+    margin-top: 25px;
+    padding: 10px;
+    cursor: pointer;
+  }
+
+.todo-lists {
+  list-style-type: none;
+}
