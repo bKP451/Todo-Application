@@ -2,7 +2,7 @@ import ProjectsListing from "./components/ProjectsListing/ProjectsListing";
 import "./App.css";
 
 function App() {
-  const initalProjects = [
+  const initialProjects = [
     {
       projectId: 0,
       projectTitle: "Get yourself a umbrella",
@@ -41,13 +41,14 @@ function App() {
     },
   ];
 
+  
   return (
     <div className="App">
       <div className="heading-wrapper">
         <h1 className="heading">TO-DOOOOO</h1>
       </div>
       <div className="body-section">
-        <ProjectsListing allProjects={initalProjects} />
+        <ProjectsListing allProjects={initialProjects} />
       </div>
     </div>
   );

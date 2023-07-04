@@ -15,3 +15,20 @@
 .project-select-button:hover {
   background-color: aqua;
 }
+.project-add-div {
+  display: flex;
+  align-items: center;
+}
+
+.project-add-div input:hover {
+  background-color: skyblue;
+}
+
+.project-add-icon {
+  margin-right: 5px;
+}
+
+.project-add-div input {
+  border: none;
+  height: 20px;
+}

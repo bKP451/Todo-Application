@@ -1,18 +1,22 @@
 import "./ProjectDescription.css";
 import TaskItem from "../TaskItem/TaskItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ProjectDescription = ({ project }) => {
   const [newTask, setNewTask] = useState("");
   const [newTaskDescription, setNewTaskDescription] = useState("");
   const [taskAddButtonActive, setTaskAddButtonActive] = useState(false);
+  const [title, setTitle] = useState(project.projectTitle);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
 
+  console.log(`I am project prop`, project);
   const addTaskHandler = () => {
     let myNewTask = {
       taskTitle: newTask,
       taskDescription: newTaskDescription,
     };
-    localStorage.setItem("mytodoList", JSON.stringify(myNewTask));
+    // localStorage.setItem("mytodoList", JSON.stringify(myNewTask));
     setNewTask("");
     setNewTaskDescription("");
   };
@@ -31,9 +35,37 @@ const ProjectDescription = ({ project }) => {
     }
   };
 
+  const handleTitleChange = (e) => {
+    setNewTitle(e.target.value);
+  };
+
+  const enableEditMode = (e) => {
+    setIsEditing(true);
+    setNewTitle(title);
+  };
+
+  const disableEditMode = (event) => {
+    setIsEditing(false);
+    setTitle(newTitle);
+  };
+
+  useEffect(() => {
+    setTitle(project.projectTitle);
+  }, [project]);
+
   return (
     <div className="project-description-section">
-      <h2>{project.projectTitle}</h2>
+      {isEditing ? (
+        <input
+          type="text"
+          value={newTitle}
+          onChange={handleTitleChange}
+          onBlur={disableEditMode}
+        />
+      ) : (
+        <h2 onClick={enableEditMode}>{title}</h2>
+      )}
+      {/* <h2 onClick={enableEditMode}>{title}</h2> */}
       <div className="todo-input-items-wrapper">
         <div className="todo-input-item">
           <label>Title</label>
@@ -65,16 +97,16 @@ const ProjectDescription = ({ project }) => {
         </div>
       </div>
       <ul className="todo-lists">
-        <li>
-          {project.tasks.map((task) => {
-            return (
+        {project.tasks && project.tasks.map((task) => {
+          return (
+            <li key={task.id} className="single-todo-item">
               <TaskItem
                 title={task.taskTitle}
                 description={task.taskDescription}
               />
-            );
-          })}
-        </li>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
