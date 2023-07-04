@@ -1,7 +1,7 @@
 import "./ProjectsListing.css";
 import { GrAdd } from "react-icons/gr";
 import ProjectDescription from "../ProjectDescription/ProjectDescription";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { uid } from "./uid";
 
 const ProjectsListing = ({ allProjects }) => {
@@ -41,7 +41,12 @@ const ProjectsListing = ({ allProjects }) => {
     }
 
     console.log("upgrade", db);
-    
+  };
+
+  const loadSeedProjectsData = () => {
+    console.log("I am the intial Projects section ");
+    // Here I will add two projects data into the indexedDB
+    addProjectsInitally();
   };
 
   const listProjects = () => {
@@ -56,22 +61,76 @@ const ProjectsListing = ({ allProjects }) => {
     getProjects.onsuccess = (event) => {
       let request = event.target;
       request.result.map((project) => {
-        console.log(project.projectTitle)
-      })
+        console.log(project.projectTitle);
+      });
     };
 
     getProjects.onerror = (error) => {
       console.warn(error);
-    }
+    };
   };
+
+  const initialProjects = [
+    {
+      projectId: uid(),
+      projectTitle: "Get yourself a umbrella",
+      tasks: [
+        {
+          taskId: 1,
+          taskTitle: "Get to the Umbrella Shop",
+          taskDescription:
+            "You have to know where to get the good umbrellas. You can ask your pals about it.",
+        },
+        {
+          taskId: 2,
+          taskTitle: "Select the color of the Umbrella",
+          taskDescription:
+            "The color the your umbrella is very important. The color of the umbrella sets your mood. Which color makes you pleasant ?",
+        },
+      ],
+    },
+    {
+      projectId: uid(),
+      projectTitle: "Swimming Lessons",
+      tasks: [
+        {
+          taskId: 1,
+          taskTitle: "Visit a swimming trainer",
+          taskDescription:
+            "You got to visit a swimming trainer. He/She will have proper information to learn swimming",
+        },
+        {
+          taskId: 2,
+          taskTitle: "Explore water bodies",
+          taskDescription:
+            "If you want to be a real life swimmer. You have got to go into the rivers, lakes and seas. It will be good for you.",
+        },
+      ],
+    },
+  ];
+  // useEffect(() => {
+  //   const handleSuccess = (event) => {
+  //     const db = event.target.result;
+  //     console.log("IndexedDB connection success", db);
+  //     loadSeedProjectsData();
+  //     // listProjects();
+  //   };
+
+  //   DBOpenReq.onsuccess = handleSuccess;
+
+  //   return () => {
+  //     DBOpenReq.onsuccess = null;
+  //   };
+  // }, []);
+  
 
   DBOpenReq.onsuccess = (event) => {
     db = event.target.result;
     console.log("IndexedDB connection success", db);
     listProjects();
+    addProjectsInitally();
   };
 
-  
   const makeTX = (storeName, mode) => {
     console.log("", db);
     let tx = db.transaction(storeName, mode);
@@ -79,6 +138,27 @@ const ProjectsListing = ({ allProjects }) => {
       console.warn(err);
     };
     return tx;
+  };
+
+  const addProjectsInitally = () => {
+    let tx = makeTX("projects", "readwrite");
+    tx.oncomplete = (event) => {
+      console.log(event);
+    };
+
+    let store = tx.objectStore("projects");
+    // let addRequest = store.add({initialProjects[0], initialProjects[1]});
+    initialProjects.forEach((project) => {
+      let addRequest = store.add(project);
+      addRequest.onsuccess = (event) => {
+        console.log("successfully added an object");
+        console.log("Now I should display project description component");
+      };
+
+      addRequest.onerror = (event) => {
+        console.log("Error to add a project object to the store");
+      };
+    });
   };
 
   const addProject = () => {

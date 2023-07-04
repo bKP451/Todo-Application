@@ -96,6 +96,7 @@ const IDB = (function init() {
       };
     }
   });
+  
   // ;
 
   document.getElementById('btnAdd').addEventListener('click', (ev) => {
