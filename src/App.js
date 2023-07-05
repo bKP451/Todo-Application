@@ -1,54 +1,48 @@
 import ProjectsListing from "./components/ProjectsListing/ProjectsListing";
 import "./App.css";
+import { initDB, loadProjects } from "./indexedDatabase/connection";
+import { useEffect, useState } from "react";
 
 function App() {
-  const initialProjects = [
-    {
-      projectId: 0,
-      projectTitle: "Get yourself a umbrella",
-      tasks: [
-        {
-          taskId: 1,
-          taskTitle: "Get to the Umbrella Shop",
-          taskDescription:
-            "You have to know where to get the good umbrellas. You can ask your pals about it.",
-        },
-        {
-          taskId: 2,
-          taskTitle: "Select the color of the Umbrella",
-          taskDescription:
-            "The color the your umbrella is very important. The color of the umbrella sets your mood. Which color makes you pleasant ?",
-        },
-      ],
-    },
-    {
-      projectId: 1,
-      projectTitle: "Swimming Lessons",
-      tasks: [
-        {
-          taskId: 1,
-          taskTitle: "Visit a swimming trainer",
-          taskDescription:
-            "You got to visit a swimming trainer. He/She will have proper information to learn swimming",
-        },
-        {
-          taskId: 2,
-          taskTitle: "Explore water bodies",
-          taskDescription:
-            "If you want to be a real life swimmer. You have got to go into the rivers, lakes and seas. It will be good for you.",
-        },
-      ],
-    },
-  ];
-
+  const [projects, setProjects] = useState([]);
   
+  useEffect(() => {
+    initDB() // Establish IndexedDB connection
+      .then(() => {
+        // Fetch projects data after the connection is established
+        // I must check the number of projects in the indexed Databaase. 
+        // I must check the number of projects stored in the indexed database
+        // If number of projects is not more than 1, then default projects,
+        // will be loaded else existing projects will be loaded
+        // Now connection to Indexed Database is successful, I should check the number
+        // of projects residing "projects" store.
+        loadProjects()
+          .then((projectsData) => {
+            console.log("Projects data:", projectsData);
+            setProjects(projectsData); // Update projects state with fetched data
+          })
+          .catch((error) => {
+            console.log("Error fetching projects:", error);
+          });
+      })
+      .catch((error) => {
+        console.log("Error initializing IndexedDB:", error);
+      });
+  }, []);
+
+
   return (
     <div className="App">
       <div className="heading-wrapper">
         <h1 className="heading">TO-DOOOOO</h1>
       </div>
       <div className="body-section">
-        <ProjectsListing allProjects={initialProjects} />
+        {/* <button onClick={loadProjects}>Load Projects</button> */}
+        {projects.length > 0 ? (
+        <ProjectsListing allProjects={projects} />
+      ) : (
+        <p>Loading projects...</p>
+      )}
       </div>
     </div>
   );
