@@ -5,8 +5,21 @@ import { useEffect, useState } from "react";
 import { uid } from "./uid";
 
 const ProjectsListing = ({ allProjects }) => {
-  const [projectId, setProjectId] = useState(0);
+  const [projectId, setProjectId] = useState(1);
   const [projectName, setProjectName] = useState("");
+  // useState to keep track of project List, so when we add a new project successfully to the indexed database, the UI will re-render
+  const [projectsList, setProjectList] = useState([]);
+  // Here at present, allProjects is passed from the App component, But I have to fetch the projects listed in the index database
+
+  // Let me make a useEffect function which will be called
+  // useEffect(() => {
+  //   // Get all the project Lists and populate in projectList
+  //   // listProjects();
+  //   console.log("I need to update the UI");
+  //   // console.log(`projects List is ${projectsList}`)
+  // }, [])
+
+  let projectsCount = 0;
 
   const handleProjectSelection = (projectId) => {
     console.log(`Project Id is ${projectId}`);
@@ -46,6 +59,10 @@ const ProjectsListing = ({ allProjects }) => {
   const loadSeedProjectsData = () => {
     console.log("I am the intial Projects section ");
     // Here I will add two projects data into the indexedDB
+    // Check the projects store to check for existing projects. If there are two projects, then do not do write operation
+    // So do Read operation
+
+    // I must get the number of projects stored in the indexed Database
     addProjectsInitally();
   };
 
@@ -60,9 +77,18 @@ const ProjectsListing = ({ allProjects }) => {
     // options can pass in a key or a keyRange
     getProjects.onsuccess = (event) => {
       let request = event.target;
-      request.result.map((project) => {
-        console.log(project.projectTitle);
-      });
+      projectsCount = request.result.length;
+      if (projectsCount > 0) {
+        // setProjectList(request.result)
+        request.result.map((project) => {
+          console.log(`I am project Title ${project.projectTitle}`);
+        });
+        // setProjectList(request.result)
+        console.log("I will populate the projectList state");
+        return;
+      } else {
+        loadSeedProjectsData();
+      }
     };
 
     getProjects.onerror = (error) => {
@@ -108,27 +134,11 @@ const ProjectsListing = ({ allProjects }) => {
       ],
     },
   ];
-  // useEffect(() => {
-  //   const handleSuccess = (event) => {
-  //     const db = event.target.result;
-  //     console.log("IndexedDB connection success", db);
-  //     loadSeedProjectsData();
-  //     // listProjects();
-  //   };
-
-  //   DBOpenReq.onsuccess = handleSuccess;
-
-  //   return () => {
-  //     DBOpenReq.onsuccess = null;
-  //   };
-  // }, []);
-  
 
   DBOpenReq.onsuccess = (event) => {
     db = event.target.result;
     console.log("IndexedDB connection success", db);
     listProjects();
-    addProjectsInitally();
   };
 
   const makeTX = (storeName, mode) => {
@@ -147,7 +157,6 @@ const ProjectsListing = ({ allProjects }) => {
     };
 
     let store = tx.objectStore("projects");
-    // let addRequest = store.add({initialProjects[0], initialProjects[1]});
     initialProjects.forEach((project) => {
       let addRequest = store.add(project);
       addRequest.onsuccess = (event) => {
@@ -159,6 +168,7 @@ const ProjectsListing = ({ allProjects }) => {
         console.log("Error to add a project object to the store");
       };
     });
+    console.log("I am running running");
   };
 
   const addProject = () => {
@@ -183,12 +193,14 @@ const ProjectsListing = ({ allProjects }) => {
     };
   };
 
+  console.log(`I am projectsCount inside ProjectListing ${projectsCount}`);
+
   return (
     <>
       <div className="projects-listing-section">
         <h2>Projects</h2>
         <ol style={{ listStyle: "none" }}>
-          {allProjects.map((project) => (
+          {projectsList && projectsList.map((project) => (
             <li key={project.projectId}>
               <button
                 type="button"
@@ -214,7 +226,7 @@ const ProjectsListing = ({ allProjects }) => {
           </div>
         </ol>
       </div>
-      <ProjectDescription project={allProjects[projectId]} />
+      {/* <ProjectDescription project={allProjects[projectId]} /> */}
     </>
   );
 };
