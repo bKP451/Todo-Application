@@ -1,17 +1,11 @@
 import "./ProjectsListing.css";
 import { GrAdd } from "react-icons/gr";
 import ProjectDescription from "../ProjectDescription/ProjectDescription";
-import { useEffect, useState } from "react";
-import { uid } from "./uid";
-import { makeTX } from "../../indexedDatabase/connection";
+import { useState } from "react";
 
 const ProjectsListing = ({ allProjects }) => {
   const [projectId, setProjectId] = useState(allProjects[0].projectId);
-  console.log(`I am allProjects ${allProjects}`);
-  // return allProjects.map((project) => project.projectTitle);
-
   const handleProjectSelection = (projectId) => {
-    console.log(`Project Id is ${projectId}`);
     setProjectId(projectId);
   };
 
