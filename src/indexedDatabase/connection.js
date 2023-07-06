@@ -65,22 +65,27 @@ export const loadProjects = () => {
 export const addDefaultProjects = () => {
   return new Promise((resolve, reject) => {
     let tx = makeTX("projects", "readwrite");
-    tx.oncomplete = (event) => {
-    };
+    tx.oncomplete = (event) => {};
 
-    let defaultProjectsArray = [];
     let store = tx.objectStore("projects");
-    let addDefaultProjectsReq = store.add(initialProjects[0]);
+    let addDefaultProjectReq = store.add(initialProjects[0]);
 
-    addDefaultProjectsReq.onsuccess = (event) => {
+    addDefaultProjectReq.onsuccess = (event) => {
       let request = event.target;
-      let defaultProjects = request.result;
-      if (defaultProjects) {
-        resolve(defaultProjects);
-      }
+      let defaultProjectKey = request.result;
+      let getAddedDefaultProRequest = store.get(defaultProjectKey);
+
+      getAddedDefaultProRequest.onsuccess = (event) => {
+        let addedDefaultProject = event.target.result;
+        resolve(addedDefaultProject);
+      };
+
+      getAddedDefaultProRequest.onerror = (error) => {
+        reject(error);
+      };
     };
 
-    addDefaultProjectsReq.onerror = (error) => {
+    addDefaultProjectReq.onerror = (error) => {
       console.log(`Error while writing projects: ${error}`);
       reject(error); // Reject with error
     };

@@ -21,10 +21,9 @@ function App() {
               projectsData.length
             );
             if (projectsData.length === 0) {
-              addDefaultProjects().then((defaultProjects) => {
-                setProjects(defaultProjects);
+              addDefaultProjects().then((defaultProject) => {
+                setProjects([defaultProject]);
               }).catch((error)=> console.log("Error while adding default projects", error));
-              console.log("I need to add default projects");
             }
             setProjects(projectsData); // Update projects state with fetched data
           })

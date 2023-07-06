@@ -4,6 +4,7 @@ import ProjectDescription from "../ProjectDescription/ProjectDescription";
 import { useState } from "react";
 
 const ProjectsListing = ({ allProjects }) => {
+  console.log(`I am all projects inside ProjectsListing component ${allProjects}`)
   const [projectId, setProjectId] = useState(allProjects[0].projectId);
   const handleProjectSelection = (projectId) => {
     setProjectId(projectId);
@@ -23,7 +24,7 @@ const ProjectsListing = ({ allProjects }) => {
                 className="project-select-button"
                 onClick={() => handleProjectSelection(project.projectId)}
               >
-                {project.projectId === projectId ? (<u>{project.projectTitle}</u>) : project.projectTitle}
+                {project.projectId ===projectId ? (<u>{project.projectTitle}</u>) : project.projectTitle}
               </button>
             </li>
           ))}
