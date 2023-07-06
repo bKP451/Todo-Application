@@ -10,6 +10,10 @@ import { useEffect, useState } from "react";
 function App() {
   const [projects, setProjects] = useState([]);
 
+  const updateProjectsList = (addedProject) => {
+   setProjects([...projects, addedProject]) 
+  }
+
   useEffect(() => {
     initDB() // Establish IndexedDB connection
       .then(() => {
@@ -43,7 +47,7 @@ function App() {
       </div>
       <div className="body-section">
         {projects.length > 0 ? (
-          <ProjectsListing allProjects={projects} />
+          <ProjectsListing allProjects={projects} updateProjectsList={updateProjectsList}/>
         ) : (
           <p>Loading projects...</p>
         )}

@@ -1,37 +1,57 @@
 import "./ProjectDescription.css";
 import TaskItem from "../TaskItem/TaskItem";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { updateProject } from "../../indexedDatabase/connection";
 
 const ProjectDescription = ({ project }) => {
+  console.log(`I am inside project ${project.projectId}`);
   const [newTask, setNewTask] = useState("");
   const [newTaskDescription, setNewTaskDescription] = useState("");
   const [taskAddButtonActive, setTaskAddButtonActive] = useState(false);
   const [title, setTitle] = useState(project.projectTitle);
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState("");
+  const taskItemTitleRef = useRef(null);
 
-  console.log(`I am project prop`, project);
-  const addTaskHandler = () => {
-    let myNewTask = {
-      taskTitle: newTask,
-      taskDescription: newTaskDescription,
+  const addTaskHandler = (event) => {
+    event.preventDefault();
+    let updatedProject = {
+      projectId: project.projectId,
+      projectTitle: project.projectTitle,
+      tasks: [
+        { taskId: 1, taskTitle: newTask, taskDescription: newTaskDescription },
+      ],
     };
-    // localStorage.setItem("mytodoList", JSON.stringify(myNewTask));
+
+    // Add tasks to the projects store
+    // I have to update the projects object
+    // Update the Project object with tasks items
+    updateProject(updatedProject)
+      .then(() => {
+        console.log("Success in putting requests");
+      })
+      .catch((error) => console.log("Error in udpating projects", error));
+    console.log("Updated Project is", updatedProject);
     setNewTask("");
     setNewTaskDescription("");
+    setTaskAddButtonActive(false);
   };
 
   const handleNewTask = (event) => {
     setNewTask(event.target.value);
-    if (event.target.value && newTaskDescription) {
+    if (event.target.value.trim() && newTaskDescription.trim()) {
       setTaskAddButtonActive(true);
+    } else {
+      setTaskAddButtonActive(false);
     }
   };
 
   const handleNewTaskDescription = (event) => {
     setNewTaskDescription(event.target.value);
-    if (newTask && event.target.value) {
+    if (newTask.trim() && event.target.value.trim()) {
       setTaskAddButtonActive(true);
+    } else {
+      setTaskAddButtonActive(false);
     }
   };
 
@@ -53,6 +73,11 @@ const ProjectDescription = ({ project }) => {
     setTitle(project.projectTitle);
   }, [project]);
 
+  useEffect(() => {
+    taskItemTitleRef.current.focus();
+    console.log("Title is", title);
+  }, [title]);
+
   return (
     <div className="project-description-section">
       {isEditing ? (
@@ -65,48 +90,51 @@ const ProjectDescription = ({ project }) => {
       ) : (
         <h2 onClick={enableEditMode}>{title}</h2>
       )}
-      {/* <h2 onClick={enableEditMode}>{title}</h2> */}
-      <div className="todo-input-items-wrapper">
-        <div className="todo-input-item">
-          <label>Title</label>
-          <input
-            type="text"
-            placeholder="Task title"
-            value={newTask}
-            onChange={handleNewTask}
-          />
+      <form onSubmit={addTaskHandler}>
+        <div className="todo-input-items-wrapper">
+          <div className="todo-input-item">
+            <label>Title</label>
+            <input
+              ref={taskItemTitleRef}
+              type="text"
+              placeholder="Task title"
+              value={newTask}
+              onChange={handleNewTask}
+            />
+          </div>
+          <div className="todo-input-item">
+            <label>Description</label>
+            <input
+              type="text"
+              placeholder="Task description"
+              value={newTaskDescription}
+              onChange={handleNewTaskDescription}
+            />
+          </div>
+          <div className="todo-input-item">
+            <button
+              type="submit"
+              className="add-task-button"
+              onClick={addTaskHandler}
+              disabled={!taskAddButtonActive}
+            >
+              Add
+            </button>
+          </div>
         </div>
-        <div className="todo-input-item">
-          <label>Description</label>
-          <input
-            type="text"
-            placeholder="Task description"
-            value={newTaskDescription}
-            onChange={handleNewTaskDescription}
-          />
-        </div>
-        <div className="todo-input-item">
-          <button
-            type="button"
-            className="add-task-button"
-            onClick={addTaskHandler}
-            disabled={!taskAddButtonActive}
-          >
-            Add
-          </button>
-        </div>
-      </div>
+      </form>
       <ul className="todo-lists">
-        {project.tasks && project.tasks.map((task) => {
-          return (
-            <li key={task.id} className="single-todo-item">
-              <TaskItem
-                title={task.taskTitle}
-                description={task.taskDescription}
-              />
-            </li>
-          );
-        })}
+        {project.tasks &&
+          project.tasks.map((task) => {
+            return (
+              <li key={task.id} className="single-todo-item">
+                <TaskItem
+                  title={task.taskTitle}
+                  description={task.taskDescription}
+                />
+              </li>
+            );
+          })}
       </ul>
     </div>
   );
